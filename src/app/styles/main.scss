@@ -30,20 +30,19 @@ p {
     width: 100%;
     height: 4px;
   }
-  // &
-}
-
-.selected-all {
-  width: 5rem;
-}
-.selected-active {
-  width: 6rem;
-}
-.selected-complete {
-  width: 7rem;
-}
-.selected {
-  &::after {
-    background-color: blue;
+  &.selected-all {
+    width: 5rem;
+  }
+  &.selected-active {
+    width: 6rem;
+  }
+  &.selected-complete {
+    width: 7rem;
+  }
+  &.selected {
+    &::after {
+      background-color: blue;
+    }
   }
 }
+
