@@ -1,0 +1,33 @@
+.delete {
+  position: relative;
+  cursor: pointer;
+  color: black;
+
+  background-color: #dc2626;
+  border-radius: 0.5rem;
+  padding: 0.8rem;
+  &:disabled {
+    cursor: not-allowed;
+    background-color: gray;
+  }
+}
+
+.labels {
+  font-size: medium;
+}
+
+.mt {
+  margin-top: 2rem;
+}
+
+.items {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  margin-right: 30%;
+}

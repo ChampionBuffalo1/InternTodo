@@ -1,0 +1,38 @@
+$primary: #60a5fa;
+$hover: #fff;
+$disabled: #6b7280;
+
+.search {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.input {
+  padding: 0.25rem 0.5rem;
+  border-width: 1px;
+  border-radius: 0.5rem;
+  height: 2rem;
+  min-width: max-content;
+  width: 35%;
+  font-size: medium;
+}
+
+.submit {
+  margin-left: 1.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  width: 5rem;
+  background-color: $primary;
+  color: black;
+  font-size: medium;
+  font-weight: 700;
+  &:disabled {
+    cursor: not-allowed;
+    background-color: $disabled;
+  }
+  // &:hover {
+  //   background-color: $hover;
+  //   color: blue;
+  // }
+}

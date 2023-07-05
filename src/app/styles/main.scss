@@ -1,0 +1,49 @@
+.heading {
+  display: flex;
+  justify-content: center;
+}
+
+.status {
+  display: flex;
+  justify-content: space-evenly;
+  font-size: large;
+  font-weight: 600;
+  margin-top: 4rem;
+  border-bottom: 0.5px solid black;
+
+}
+
+.striked {
+  text-decoration: line-through;
+}
+
+p {
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 20px;
+  text-align: center;
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+  }
+  // &
+}
+
+.selected-all {
+  width: 5rem;
+}
+.selected-active {
+  width: 6rem;
+}
+.selected-complete {
+  width: 7rem;
+}
+.selected {
+  &::after {
+    background-color: blue;
+  }
+}
