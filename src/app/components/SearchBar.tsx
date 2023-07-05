@@ -5,14 +5,14 @@ import { SyntheticEvent, useCallback, useContext, useState } from "react";
 import { TodoContext } from "../TodoContext";
 
 export default function SearchBar() {
-  const { todo, SetTodo } = useContext(TodoContext);
+  const { todo, setTodo } = useContext(TodoContext);
   const [input, setInput] = useState<string>("");
 
   const handleSubmit = useCallback(
     (event: SyntheticEvent) => {
       event.preventDefault();
       if (input) {
-        SetTodo([
+        setTodo([
           ...todo,
           {
             completed: false,
@@ -22,7 +22,7 @@ export default function SearchBar() {
       }
       setInput("");
     },
-    [input, todo, SetTodo]
+    [input, todo, setTodo]
   );
 
   return (

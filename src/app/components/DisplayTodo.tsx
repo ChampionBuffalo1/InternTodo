@@ -4,7 +4,7 @@ import { ChangeEvent, useCallback, useContext, useMemo } from "react";
 import "../styles/todo.scss";
 
 export default function DisplayTodo({ action }: { action: Action }) {
-  const { todo, SetTodo } = useContext(TodoContext);
+  const { todo, setTodo } = useContext(TodoContext);
   const disableDeleteAll = useMemo(
     () => todo.filter((task) => task.completed).length === 0,
     [todo]
@@ -20,15 +20,15 @@ export default function DisplayTodo({ action }: { action: Action }) {
         }
         return item;
       });
-      SetTodo(newTodo);
+      setTodo(newTodo);
     },
-    [todo, SetTodo]
+    [todo, setTodo]
   );
 
   const handleDelete = useCallback(() => {
     const newTodo = todo.filter((item) => !item.completed);
-    SetTodo(newTodo);
-  }, [todo, SetTodo]);
+    setTodo(newTodo);
+  }, [todo, setTodo]);
   return (
     <>
       <div className="mt">
@@ -57,7 +57,7 @@ export default function DisplayTodo({ action }: { action: Action }) {
                   <span
                     onClick={() => {
                       const newTodo = todo.filter((_, id) => id !== idx);
-                      SetTodo(newTodo);
+                      setTodo(newTodo);
                     }}
                   >
                     <svg

@@ -16,14 +16,11 @@ export const TodoContext = createContext<{
 
 export const TodoProvider = ({ children }: { children: ReactNode }) => {
   const [todo, setTodo] = useState<Todo[]>([]);
-  const SetTodo = (updatedTodo: Todo[]) => {
-    setTodo(updatedTodo);
-  };
   return (
     <TodoContext.Provider
       value={{
         todo,
-        SetTodo,
+        setTodo
       }}
     >
       {children}
