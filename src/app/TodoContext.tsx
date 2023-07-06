@@ -8,10 +8,10 @@ export type Todo = {
 
 export const TodoContext = createContext<{
   todo: Todo[];
-  SetTodo: (updatedTodo: Todo[]) => void;
+  setTodo: (updatedTodo: Todo[]) => void;
 }>({
   todo: [],
-  SetTodo: () => {},
+  setTodo: () => {},
 });
 
 export const TodoProvider = ({ children }: { children: ReactNode }) => {
