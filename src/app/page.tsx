@@ -15,13 +15,13 @@ export default function Home() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("/api/task/getData?filter=" + action)
+    fetch("/api/task/getData?filter=all")
       .then((r) => r.json())
       .then(({ tasks }) => {
         setTodo(tasks);
         setLoading(false);
       });
-  }, [action, setTodo]);
+  }, [setTodo]);
 
   return (
     <div>
