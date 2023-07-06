@@ -10,11 +10,6 @@
   font-weight: 600;
   margin-top: 4rem;
   border-bottom: 0.5px solid black;
-
-}
-
-.striked {
-  text-decoration: line-through;
 }
 
 p {
@@ -46,3 +41,10 @@ p {
   }
 }
 
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  font-size: 2rem;
+}
