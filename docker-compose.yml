@@ -8,12 +8,9 @@ services:
     ports:
       - 3000:3000
     environment:
-      MONGO_URL: mongodb://${MONGO_ROOT_USER:-root}:${MONGO_ROOT_PASSWORD:-admin}@mongo:27017
-      MONGO_DB_NAME: ${MONGO_DB_NAME:-todo}
-    volumes:
-      - .:/app
+      DB_URL: mongodb://${MONGO_ROOT_USER:-root}:${MONGO_ROOT_PASSWORD:-admin}@mongo:27017
     networks:
-      - main
+      - primary
     depends_on:
       - mongo
 
@@ -30,9 +27,9 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-admin}
       MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-todo}
     networks:
-      - main
+      - primary
 
 volumes:
   mongo: {}
 networks:
-  main: {}
+  primary: {}
