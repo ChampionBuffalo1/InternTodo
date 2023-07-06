@@ -12,13 +12,23 @@ export default function SearchBar() {
     (event: SyntheticEvent) => {
       event.preventDefault();
       if (input) {
-        setTodo([
-          ...todo,
-          {
-            completed: false,
+        fetch("/api/task/addData", {
+          method: "POST",
+          body: JSON.stringify({
             content: input,
-          },
-        ]);
+          }),
+        })
+          .then((r) => r.json())
+          .then(({ id }) => {
+            setTodo([
+              ...todo,
+              {
+                completed: false,
+                content: input,
+                _id: id,
+              },
+            ]);
+          });
       }
       setInput("");
     },

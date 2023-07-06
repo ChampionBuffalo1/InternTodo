@@ -2,14 +2,26 @@
 
 import "./styles/main.scss";
 
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DisplayTodo from "./components/DisplayTodo";
 import SearchBar from "./components/SearchBar";
-
-export type Action = "all" | "active" | "completed";
+import { Action } from "./types";
+import { TodoContext } from "./TodoContext";
 
 export default function Home() {
-  const [action, setAction] = useState<Action>("active");
+  const { setTodo } = useContext(TodoContext);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [action, setAction] = useState<Action>("all");
+
+  useEffect(() => {
+    setLoading(true);
+    fetch("/api/task/getData?filter=" + action)
+      .then((r) => r.json())
+      .then(({ tasks }) => {
+        setTodo(tasks);
+        setLoading(false);
+      });
+  }, [action, setTodo]);
 
   return (
     <div>
@@ -42,7 +54,8 @@ export default function Home() {
         </div>
       </div>
       {action !== "completed" && <SearchBar />}
-      <DisplayTodo action={action} />
+      {!isLoading && <DisplayTodo action={action} />}
+      {isLoading && <div className="loading">Loading...</div>}
     </div>
   );
 }

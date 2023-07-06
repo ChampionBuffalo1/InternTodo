@@ -1,10 +1,6 @@
 "use client";
+import { Todo } from "./types";
 import { ReactNode, createContext, useState } from "react";
-
-export type Todo = {
-  completed: boolean;
-  content: string;
-};
 
 export const TodoContext = createContext<{
   todo: Todo[];
@@ -20,7 +16,7 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
     <TodoContext.Provider
       value={{
         todo,
-        setTodo
+        setTodo,
       }}
     >
       {children}
