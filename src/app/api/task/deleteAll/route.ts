@@ -1,8 +1,10 @@
-import { NextResponse } from "next/server";
-import { deleteCompletedTask } from "../../controller/tasks";
+import { AuthHeader } from "@/lib/Constants";
+import { NextRequest, NextResponse } from "next/server";
+import { deleteCompletedTask } from "../../controller/task";
 
-export async function POST() {
-  const deleted = await deleteCompletedTask();
+export async function POST(request: NextRequest) {
+  const createdBy = request.headers.get(AuthHeader)!;
+  const deleted = await deleteCompletedTask(createdBy);
   return NextResponse.json({
     deleteCount: deleted.deletedCount,
   });

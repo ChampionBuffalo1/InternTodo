@@ -1,12 +1,11 @@
 import { AuthHeader } from "@/lib/Constants";
 import { NextRequest, NextResponse } from "next/server";
-import { deleteCompletedTask } from "../../controller/task";
+import { hasUser } from "../controller/user";
 
 export async function POST(request: NextRequest) {
-  const createdBy = request.headers.get(AuthHeader)!;
   const body = await request.json();
-  const deleted = await deleteCompletedTask(createdBy, body.id);
+  const userExists = await hasUser(body.username, body.email);
   return NextResponse.json({
-    deleteCount: deleted.deletedCount,
+    exists: userExists,
   });
 }

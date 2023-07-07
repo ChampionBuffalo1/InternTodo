@@ -1,9 +1,19 @@
+import { Action } from "@types";
+import { AuthHeader } from "@/lib/Constants";
 import { NextRequest, NextResponse } from "next/server";
-import { Action } from "./app/types";
-const basePath = "/api/task";
+
+const taskPath = "/api/task";
 
 export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith(basePath + "/getData")) {
+  // On all routes except /api/user
+  const pathname = request.nextUrl.pathname;
+  const emailHeader = request.headers.get(AuthHeader);
+  if (!emailHeader && !pathname.startsWith("/api/user"))
+    return NextResponse.json({
+      error: `All request must have ${AuthHeader} header`,
+    });
+
+  if (pathname === taskPath + "/getData") {
     const { searchParams } = new URL(request.url);
     const filter = searchParams.get("filter")?.toLowerCase() as Action;
     if (filter !== "all" && filter !== "active" && filter !== "completed") {
@@ -15,8 +25,17 @@ export async function middleware(request: NextRequest) {
   }
 
   const reqBody = await request.json();
-  if (request.nextUrl.pathname.startsWith(basePath + "/addData")) {
-    if (!Object.hasOwn(reqBody, "content")) {
+  if (pathname.startsWith("/api/user")) {
+    if (!reqBody.username || !reqBody.email) {
+      return NextResponse.json({
+        error: "username or email missing from request body",
+      });
+    }
+    return NextResponse.next();
+  }
+
+  if (pathname.startsWith(taskPath + "/addData")) {
+    if (!reqBody.content) {
       return NextResponse.json({
         error: "task content missing from request body",
       });
@@ -24,17 +43,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (request.nextUrl.pathname.startsWith(basePath + "/changeStatus")) {
-    if (!Object.hasOwn(reqBody, "id")) {
-      return NextResponse.json({
-        error: "task id missing from request body",
-      });
-    }
-    return NextResponse.next();
-  }
-
-  if (request.nextUrl.pathname.startsWith(basePath + "/deleteData")) {
-    if (!Object.hasOwn(reqBody, "id")) {
+  if (
+    pathname.startsWith(taskPath + "/changeStatus") ||
+    pathname.startsWith(taskPath + "/deleteData")
+  ) {
+    if (!reqBody.id) {
       return NextResponse.json({
         error: "task id missing from request body",
       });
@@ -45,5 +58,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/task/:path*"],
+  matcher: ["/api/task/:path*", "/api/user/:path*"],
 };

@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { addTask } from "../../controller/task";
-import { AuthHeader } from "@/lib/Constants";
+import { createUser } from "../../controller/user";
 
 export async function POST(request: NextRequest) {
   const json: Record<string, unknown> = {};
   try {
-    const createdBy = request.headers.get(AuthHeader)!;
     const body = await request.json();
-    const id = await addTask(body.content, createdBy);
-    json["id"] = id;
+    const user = await createUser(body.username, body.email);
+    json["user"] = user;
   } catch (err) {
     json["error"] = (err as Error).message || "Unknown error";
   }
