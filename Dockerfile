@@ -24,4 +24,4 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=todoApp:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=todoApp:nodejs /app/.next/static ./.next/static
 
-CMD ["node", "server.js"]
+CMD ["yarn", "start"]
