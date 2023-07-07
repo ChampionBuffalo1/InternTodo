@@ -1,53 +1,65 @@
-"use client";
-import "../styles/todo.scss";
+import "@styles/todo.scss";
 import type { Action, Todo } from "../types";
 import { TodoContext } from "../TodoContext";
 import { useCallback, useContext, useMemo } from "react";
+import { axiosInstance } from "@/lib/axiosInstance";
+import { EmailContext } from "../EmailContext";
 
 export default function DisplayTodo({ action }: { action: Action }) {
+  const { email } = useContext(EmailContext);
+  const config = useMemo(
+    () => ({
+      headers: {
+        "x-email-auth": email,
+      },
+    }),
+    [email]
+  );
   const { todo, setTodo } = useContext(TodoContext);
   const disableDeleteAll = useMemo(
-    () => todo.filter((task) => task.completed).length === 0,
+    () => !!todo?.filter((task) => task.completed).length,
     [todo]
   );
   const handleChange = useCallback(
-    (item: Todo) => {
-      if (item.completed) return;
-      fetch("/api/task/changeStatus", {
-        method: "POST",
-        body: JSON.stringify({
-          id: item._id,
-        }),
-      })
-        .then((res) => res.json())
+    (oldItem: Todo) => {
+      if (oldItem.completed) return;
+      axiosInstance
+        .post(
+          "/task/changeStatus",
+          JSON.stringify({
+            id: oldItem._id,
+          }),
+          config
+        )
         .then(() => {
-          const newTodo = todo.map((litem) => {
-            if (litem._id === item._id) {
+          const newTodo = todo.map((item) => {
+            if (item._id === oldItem._id) {
               return {
-                ...litem,
-                completed: !litem.completed,
+                ...item,
+                completed: !item.completed,
               };
             }
-            return litem;
+            return item;
           });
           setTodo(newTodo);
         });
     },
-    [todo, setTodo]
+    [todo, config, setTodo]
   );
 
   const handleDelete = useCallback(
     (id?: string) => {
       if (id) {
-        fetch("/api/task/deleteData", {
-          method: "POST",
-          body: JSON.stringify({
-            id,
-          }),
-        })
-          .then((res) => res.json())
-          .then(({ deleteCount }) => {
-            if (deleteCount === 1) {
+        axiosInstance
+          .post(
+            "/task/deleteData",
+            JSON.stringify({
+              id,
+            }),
+            config
+          )
+          .then(({ data }) => {
+            if (data.deleteCount === 1) {
               const newTodo = todo.filter((item) => item._id !== id);
               setTodo(newTodo);
             }
@@ -56,18 +68,15 @@ export default function DisplayTodo({ action }: { action: Action }) {
       }
 
       const oldCount = todo.length;
-      fetch("/api/task/deleteAll", {
-        method: "POST",
-        body: JSON.stringify({}),
-      })
-        .then((res) => res.json())
-        .then(({ deleteCount }) => {
+      axiosInstance
+        .post("/task/deleteAll", JSON.stringify({}), config)
+        .then(({ data }) => {
           const newTodo = todo.filter((item) => !item.completed);
           setTodo(newTodo);
-          console.assert(newTodo.length === oldCount - deleteCount);
+          console.assert(newTodo.length === oldCount - data.deleteCount);
         });
     },
-    [todo, setTodo]
+    [todo, config, setTodo]
   );
 
   return (

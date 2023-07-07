@@ -3,8 +3,11 @@
 import "../styles/search.scss";
 import { SyntheticEvent, useCallback, useContext, useState } from "react";
 import { TodoContext } from "../TodoContext";
+import { axiosInstance } from "@/lib/axiosInstance";
+import { EmailContext } from "../EmailContext";
 
 export default function SearchBar() {
+  const { email } = useContext(EmailContext);
   const { todo, setTodo } = useContext(TodoContext);
   const [input, setInput] = useState<string>("");
 
@@ -12,27 +15,34 @@ export default function SearchBar() {
     (event: SyntheticEvent) => {
       event.preventDefault();
       if (input) {
-        fetch("/api/task/addData", {
-          method: "POST",
-          body: JSON.stringify({
-            content: input,
-          }),
-        })
-          .then((r) => r.json())
-          .then(({ id }) => {
+        axiosInstance
+          .post(
+            "/task/addData",
+            JSON.stringify({
+              content: input,
+            }),
+            {
+              headers: {
+                "x-email-auth": email,
+              },
+            }
+          )
+          .then(({ data }) => {
+            const email = localStorage.getItem("email")!;
             setTodo([
               ...todo,
               {
                 completed: false,
                 content: input,
-                _id: id,
+                _id: data.id,
+                createdBy: email,
               },
             ]);
           });
       }
       setInput("");
     },
-    [input, todo, setTodo]
+    [input, email, todo, setTodo]
   );
 
   return (

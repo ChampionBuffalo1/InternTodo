@@ -1,3 +1,4 @@
+import { EmailProvider } from "./EmailContext";
 import { TodoProvider } from "./TodoContext";
 import "./styles/globals.scss";
 import { Inter } from "next/font/google";
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <TodoProvider>{children}</TodoProvider>
+        <EmailProvider>
+          <TodoProvider>{children}</TodoProvider>
+        </EmailProvider>
       </body>
     </html>
   );
